@@ -1,6 +1,6 @@
 name: otel_digitalocean
 description: "Dartastic OpenTelemetry bridge for DigitalOcean (droplets / spaces / databases / k8s / app platform / functions / load balancers / DNS)."
-version: 0.1.0-beta.1-wip
+version: 0.1.0-beta.1
 repository: https://github.com/dartastic/otel_digitalocean
 homepage: https://dartastic.io
 publish_to: https://pub.dartastic.io
