@@ -1,15 +1,16 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_digitalocean_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_digitalocean';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class DigitalOceanResult {
+  /// Creates a result.
   const DigitalOceanResult({
     this.surface,
     this.region,
@@ -130,8 +131,13 @@ class DigitalOceanResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class DigitalOceanCallResult<T> {
+  /// Creates a call result.
   const DigitalOceanCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final DigitalOceanResult? result;
 }
@@ -175,7 +181,7 @@ Future<T> tracedDigitalOcean<T>({
   final span = _tracer().startSpan(
     'digitalocean $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
@@ -183,115 +189,116 @@ Future<T> tracedDigitalOcean<T>({
       final res = r.result!;
       final extras = <Attribute<Object>>[];
       if (res.surface != null) {
-        extras.add(OTel.attributeString('digitalocean.surface', res.surface!));
+        extras
+            .add(OTelAPI.attributeString('digitalocean.surface', res.surface!));
       }
       if (res.region != null) {
-        extras.add(OTel.attributeString('digitalocean.region', res.region!));
+        extras.add(OTelAPI.attributeString('digitalocean.region', res.region!));
       }
       if (res.entityId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.entity.id',
           res.entityId!,
         ));
       }
       if (res.entityName != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.entity.name',
           res.entityName!,
         ));
       }
       if (res.dropletSize != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.droplet.size',
           res.dropletSize!,
         ));
       }
       if (res.dropletImage != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.droplet.image',
           res.dropletImage!,
         ));
       }
       if (res.dropletStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.droplet.status',
           res.dropletStatus!,
         ));
       }
       if (res.spacesBucket != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.spaces.bucket',
           res.spacesBucket!,
         ));
       }
       if (res.spacesObject != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.spaces.object',
           res.spacesObject!,
         ));
       }
       if (res.objectSizeBytes != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'digitalocean.spaces.object.size_bytes',
           res.objectSizeBytes!,
         ));
       }
       if (res.databaseEngine != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.database.engine',
           res.databaseEngine!,
         ));
       }
       if (res.databaseVersion != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.database.version',
           res.databaseVersion!,
         ));
       }
       if (res.databaseStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.database.status',
           res.databaseStatus!,
         ));
       }
       if (res.databaseSize != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.database.size',
           res.databaseSize!,
         ));
       }
       if (res.databaseNodes != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'digitalocean.database.nodes',
           res.databaseNodes!,
         ));
       }
       if (res.kubernetesVersion != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.k8s.version',
           res.kubernetesVersion!,
         ));
       }
       if (res.kubernetesNodePoolCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'digitalocean.k8s.node_pool.count',
           res.kubernetesNodePoolCount!,
         ));
       }
       if (res.kubernetesAutoUpgrade != null) {
-        extras.add(OTel.attributeBool(
+        extras.add(OTelAPI.attributeBool(
           'digitalocean.k8s.auto_upgrade',
           res.kubernetesAutoUpgrade!,
         ));
       }
       if (res.appSpec != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.app.spec',
           res.appSpec!,
         ));
       }
       if (res.appPhase != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.app.phase',
           res.appPhase!,
         ));
@@ -303,77 +310,77 @@ Future<T> tracedDigitalOcean<T>({
         }
       }
       if (res.appBuildId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.app.build_id',
           res.appBuildId!,
         ));
       }
       if (res.appDeploymentId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.app.deployment_id',
           res.appDeploymentId!,
         ));
       }
       if (res.appActiveDeploymentId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.app.active_deployment_id',
           res.appActiveDeploymentId!,
         ));
       }
       if (res.functionName != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.function.name',
           res.functionName!,
         ));
       }
       if (res.functionRuntime != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.function.runtime',
           res.functionRuntime!,
         ));
       }
       if (res.loadBalancerAlgorithm != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.lb.algorithm',
           res.loadBalancerAlgorithm!,
         ));
       }
       if (res.loadBalancerProtocol != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.lb.protocol',
           res.loadBalancerProtocol!,
         ));
       }
       if (res.dnsType != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.dns.type',
           res.dnsType!,
         ));
       }
       if (res.dnsTtl != null) {
-        extras.add(OTel.attributeInt('digitalocean.dns.ttl', res.dnsTtl!));
+        extras.add(OTelAPI.attributeInt('digitalocean.dns.ttl', res.dnsTtl!));
       }
       if (res.rateLimitRemaining != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'digitalocean.rate_limit.remaining',
           res.rateLimitRemaining!,
         ));
       }
       if (res.errorId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.error.id',
           res.errorId!,
         ));
         span.setStatus(SpanStatusCode.Error, 'DO ${res.errorId}');
       }
       if (res.errorMessage != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'digitalocean.error.message',
           res.errorMessage!,
         ));
       }
       if (res.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           res.statusCode!,
         ));
@@ -381,13 +388,13 @@ Future<T> tracedDigitalOcean<T>({
           span.setStatus(SpanStatusCode.Error, 'DO HTTP ${res.statusCode}');
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
